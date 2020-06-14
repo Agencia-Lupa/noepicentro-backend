@@ -11,9 +11,9 @@
  pip install -r requirements.txt
 ```
 
-	_É muito provável que isso dê ruim, porque as dependencias do Geopandas são chatinhas de lidar e algumas não são distribuídas de forma zoada. Caso dê ruim, pode ser que seja necessário usar o Anaconda. Para isso, é importante ver a sessão [Installing from source](https://geopandas.org/install.html#installing-from-source) da documentação._
+_É muito provável que isso dê ruim, porque as dependencias do Geopandas são chatinhas de lidar e algumas não são distribuídas de forma zoada. Caso dê ruim, pode ser que seja necessário usar o Anaconda. Para isso, é importante ver a sessão [Installing from source](https://geopandas.org/install.html#installing-from-source) da documentação._
 
-	_Basicamente, precisamos dos seguintes pacotes: shapely, fiona, rtree, pygeos, geopandas, feather, geofeather. Destes, só o último não está disponível via conda install e precisa ser instalado via pip._  
+_Basicamente, precisamos dos seguintes pacotes: shapely, fiona, rtree, pygeos, geopandas, feather, geofeather. Destes, só o último não está disponível via conda install e precisa ser instalado via pip._  
 
 4. Extraia os componentes do arquivo `data/setores_censitarios_shp_reduzido.tar.xz` para um diretório com o mesmo nome.
 
