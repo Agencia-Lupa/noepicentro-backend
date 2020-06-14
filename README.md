@@ -12,7 +12,7 @@ _Basicamente, precisamos dos seguintes pacotes: shapely, fiona, rtree, pygeos, g
 
 2. Extraia os componentes do arquivo `data/setores_censitarios_shp_reduzido.tar.xz` para um diretório com o mesmo nome.
 
-3. Use ```python preare_tracts.py``` para pré-processar os dados dos setores censitários. Isso pode demorar um bocado, mas vai gerar uma série de arquivos .feather, que são eficientes e otimizados, no novo diretório `setores_censitarios_divididos_feather`.
+3. Use ```python prepare_tracts.py``` para pré-processar os dados dos setores censitários. Isso pode demorar um bocado, mas vai gerar uma série de arquivos eficientes e otimizados, no novo diretório `setores_censitarios_divididos_feather`.
 
 4. Use ```python find_radius.py lat lon``` para obter o raio ao redor de um par específico de coordenadas.
 
