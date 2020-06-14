@@ -3,7 +3,7 @@
 1. Instale os requerimentos em um ambiente virtual com o seguintes comando:
 
 ```
- pip install -r /path/to/requirements.txt
+ pip install -r requirements.txt
 ```
 
 _É muito provável que isso dê ruim, porque as dependencias do Geopandas são chatinhas de lidar e algumas não são distribuídas de forma zoada. Caso dê ruim, pode ser que seja necessário usar o Anaconda. Para isso, é importante ver a sessão [Installing from source](https://geopandas.org/install.html#installing-from-source) da documentação._
