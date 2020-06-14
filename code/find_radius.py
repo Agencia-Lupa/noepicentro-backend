@@ -387,7 +387,7 @@ def process_input(point):
 def main(argv):
         
     if len(argv) != 2:
-        print("Usage: python lat lon")
+        print("Usage: python find_radius.py lat lon")
         sys.exit(1)
     
     # Gets input from user and turns it into a shapely point
