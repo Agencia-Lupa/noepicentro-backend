@@ -11,7 +11,6 @@ import pandas as pd
 import geopandas as gpd
 import glob, random, sys, time
 
-get_ipython().run_line_magic('matplotlib', 'inline')
 pd.options.mode.chained_assignment = None  # default='warn'
 gpd.options.use_pygeos = True
 
@@ -381,16 +380,12 @@ def process_input(point):
 
     # Returns the point and it's respective radius as output
     # TO DO: for test purposes with Tiago only
+    print(point.coords[0], area.exterior.coords[0])
     return point.coords[0], area.exterior.coords[0]
 
 
-# In[141]:
-
-
 def main(argv):
-    
-    argv = sys.argv
-    
+        
     if len(argv) != 2:
         print("Usage: python lat lon")
         sys.exit(1)
@@ -398,4 +393,6 @@ def main(argv):
     # Gets input from user and turns it into a shapely point
     return process_input(argv)
     
+if __name__ == "__main__":
 
+    main(sys.argv[1:])

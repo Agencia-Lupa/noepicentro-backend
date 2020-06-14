@@ -278,8 +278,6 @@ def main():
     return bboxes
 
 
-
-
 if __name__ == "__main__":
     main()
 
