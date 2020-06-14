@@ -240,11 +240,12 @@ def main():
             
     # Make sure that the output directory is empty, avoiding overwrites
 
+    directory =  "../data/setores_censitarios_divididos_feather/"
+
     if not os.path.exists(directory):
         
         os.makedirs(directory)
     
-    directory =  "../data/setores_censitarios_divididos_feather/"
             
     for f in glob.glob(directory + "*"):
         
