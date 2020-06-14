@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
 
 
 '''
@@ -9,10 +8,6 @@ In this script, we split the spaefiles in a 150 x 150 grid, allowing
 for better performance when computing the affected area in the main
 script
 '''
-
-
-# In[2]:
-
 
 from geofeather import to_geofeather, from_geofeather
 from shapely.geometry import Polygon, MultiPolygon, LineString
@@ -26,7 +21,6 @@ gpd.options.use_pygeos = True
 pd.set_option('display.float_format', lambda x: '%.5f' % x)
 
 
-# In[3]:
 
 
 def read_data(path_to_tracts, path_to_shp):
@@ -53,7 +47,6 @@ def read_data(path_to_tracts, path_to_shp):
     return tracts, shp
 
 
-# In[4]:
 
 
 def merge_tracts_and_shape(tracts, shp):
@@ -67,7 +60,6 @@ def merge_tracts_and_shape(tracts, shp):
     return shp.merge(tracts, left_on='CD_GEOCODI', right_on='Cod_setor', how='left')
 
 
-# In[5]:
 
 
 def divide_bbox(rectangle, nrows, ncols): 
@@ -96,7 +88,6 @@ def divide_bbox(rectangle, nrows, ncols):
     return [ split_rectangle for split_rectangle in rectangle ]
 
 
-# In[6]:
 
 
 def find_neighbors(row, gdf):
@@ -117,7 +108,6 @@ def find_neighbors(row, gdf):
     })
 
 
-# In[7]:
 
 
 def find_intersections(tracts, spatial_index, area):
@@ -136,7 +126,6 @@ def find_intersections(tracts, spatial_index, area):
     return matches
 
 
-# In[8]:
 
 
 def compute_population_in_area(matches, area):
@@ -170,7 +159,6 @@ def compute_population_in_area(matches, area):
     return matches.reset_index(drop=True)
 
 
-# In[9]:
 
 
 def split_tracts(row, output_dir, sindex, tracts):
@@ -223,7 +211,6 @@ def split_tracts(row, output_dir, sindex, tracts):
     return f(bbox, index, output_dir, sindex, tracts)
 
 
-# In[10]:
 
 
 def main():    
@@ -252,6 +239,10 @@ def main():
     bboxes.crs = gdf.crs
             
     # Make sure that the output directory is empty, avoiding overwrites
+
+    if not os.path.exists(directory):
+        
+        os.makedirs(directory)
     
     directory =  "../data/setores_censitarios_divididos_feather/"
             
@@ -286,7 +277,6 @@ def main():
     return bboxes
 
 
-# In[11]:
 
 
 if __name__ == "__main__":
