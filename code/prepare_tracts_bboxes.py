@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
-
 '''
 In this script, we split the spaefiles in a 150 x 150 grid, allowing
 for better performance when computing the affected area in the main
@@ -12,16 +10,12 @@ script
 from geofeather import to_geofeather, from_geofeather
 from shapely.geometry import Polygon, MultiPolygon, LineString
 from shapely.ops import split
-from sys import getsizeof
 import geopandas as gpd
 import pandas as pd
 import glob, multiprocessing, os, re, shutil
 
 gpd.options.use_pygeos = True
 pd.set_option('display.float_format', lambda x: '%.5f' % x)
-
-
-
 
 def read_data(path_to_tracts, path_to_shp):
     
@@ -126,8 +120,6 @@ def find_intersections(tracts, spatial_index, area):
     return matches
 
 
-
-
 def compute_population_in_area(matches, area):
     '''
     Calculates how many people live in the intersecting polygons.
@@ -215,7 +207,7 @@ def split_tracts(row, output_dir, sindex, tracts):
 
 def main():    
         
-    df, gdf = read_data("../data/censo_dados_resumidos.csv","../data/setores_censitarios_shp_reduzido/")
+    df, gdf = read_data("../data/tracts_basic_data.csv","../data/geo_data/setores_censitarios_shp_reduzido/")
     
     gdf = merge_tracts_and_shape(df, gdf)    
     
@@ -240,7 +232,7 @@ def main():
             
     # Make sure that the output directory is empty, avoiding overwrites
 
-    directory =  "../data/setores_censitarios_divididos_feather/"
+    directory =  "../output/setores_censitarios_divididos_feather/"
 
     if not os.path.exists(directory):
         
@@ -273,7 +265,7 @@ def main():
     
     bboxes[['neighbors', 'neighbor_count']] = bboxes.apply(find_neighbors, args=[bboxes], axis=1)    
 
-    to_geofeather(bboxes, "../data/index_bboxes.feather")
+    to_geofeather(bboxes, "../output/index_tracts_bboxes.feather")
     
     return bboxes
 

@@ -7,108 +7,98 @@
 import multiprocessing
 from geofeather import to_geofeather, from_geofeather
 from shapely.geometry import Point, Polygon
+from shapely.ops import nearest_points
 import pandas as pd
 import geopandas as gpd
-import glob, random, sys, time
+import glob, json, pygeos, random, sys, time
 
 pd.options.mode.chained_assignment = None  # default='warn'
 gpd.options.use_pygeos = True
 
+###############
+### HELPERS ###
+###############
 
-# In[49]:
-
-
-def read_data(path_to_tracts, path_to_shp):
+# def read_data(path_to_tracts, path_to_shp):
     
-    dtype = { 
+#     dtype = { 
         
-        "CD_GEOCODI": str,
-        "CD_GEOCODM": str,
-        "CD_MUNICIP": str,
-        "Cod_setor": str
+#         "CD_GEOCODI": str,
+#         "CD_GEOCODM": str,
+#         "CD_MUNICIP": str,
+#         "Cod_setor": str
         
-    }
+#     }
     
-    tracts = pd.read_csv(path_to_tracts, dtype=dtype)
+#     tracts = pd.read_csv(path_to_tracts, dtype=dtype)
     
-    shp = gpd.read_file(path_to_shp, dtype=dtype)
+#     shp = gpd.read_file(path_to_shp, dtype=dtype)
     
-    return tracts, shp
+#     return tracts, shp
 
-
-# In[31]:
-
-
-def random_points(n=1):
+# def random_points(n=1):
     
-    '''
-    Generates n random points in the country
-    '''
+#     '''
+#     Generates n random points in the country
+#     '''
     
-    # Load the outline of Brazil
-    polygon = gpd.read_file("https://servicodados.ibge.gov.br/api/v2/malhas?qualidade=1&formato=application/vnd.geo+json")
+#     # Load the outline of Brazil
+#     polygon = gpd.read_file("../data/malha_brasil/malha.json")
     
-    polygon = polygon.loc[0, 'geometry']
+#     polygon = polygon.loc[0, 'geometry']
         
-    # Get's its bounding box
-    minx, miny, maxx, maxy = polygon.bounds
+#     # Get's its bounding box
+#     minx, miny, maxx, maxy = polygon.bounds
     
-    # Generates a random point within the bounding box
-    # untill it falls within the country
+#     # Generates a random point within the bounding box
+#     # untill it falls within the country
     
-    points = [ ]
+#     points = [ ]
     
-    while len(points) < n:
+#     while len(points) < n:
         
-        point = Point(random.uniform(minx, maxx), random.uniform(miny, maxy))
+#         point = Point(random.uniform(minx, maxx), random.uniform(miny, maxy))
         
-        if polygon.contains(point):
+#         if polygon.contains(point):
             
-            points.append(point)
+#             points.append(point)
             
-    return points
-
-
-# In[46]:
-
+#     return points
 
 def parse_input(argv):
     
     '''
     Parses the input that was passad 
     through the command line and returns
-    a point
+    a dictionary_object
     '''
                 
     point = [float(coord.strip()) for coord in argv]
     
     point = Point(point[1], point[0]) # Shapely requires a lon, lat point
-        
+
     return point
 
-
-# In[47]:
-
-
-def covid_count(measure='deaths'):
-    '''
-    TO DO
-    
+def get_covid_count(measure='deaths'):
+    '''    
     Returns the current number of covid deaths
-    or cases registered in the Country
+    or cases registered in the country according
+    to that tha we have pre-processed
     '''
     
-    return 100000
+    with open("../output/case-count.json") as file:
 
+        data = json.load(file)
 
-# In[48]:
-
+    return data[measure]
 
 def find_user_area(point, target):
     
     '''
     Finds the area that we will need to
     process according to the position of the point
+
+    TO DO: use Pandas vectorization optimization instead of iterating through rows
     '''
     
     # A list with the quadrants whose population should be counted
@@ -122,7 +112,7 @@ def find_user_area(point, target):
     
     # Loads the quadrant data
     
-    reference_map = from_geofeather("../data/index_bboxes.feather")
+    reference_map = from_geofeather("../output/index_tracts_bboxes.feather")
        
     # Finds in which quadrant the point falls
     
@@ -182,17 +172,46 @@ def find_user_area(point, target):
         
     return pd.concat(gdfs)
 
+def find_user_city(point, target):
+    '''
+    Finds and loads the bounding box which contains
+    the user city and retrieves its data
+    '''
 
-# In[50]:
+    # Loads the quadrant data
+    
+    reference_map = from_geofeather("../output/index_city_bboxes.feather")
+       
+    # Finds in which quadrant the point falls
+    
+    quadrant = reference_map[ reference_map.geometry.contains(point) ].reset_index(drop=True)
 
+    assert quadrant.shape[0] == 1
+
+    quadrant = from_geofeather(quadrant.loc[0, "fpath"])
+
+    # Find in which city of the quadrant the point falls in
+
+    user_city = quadrant[ quadrant.geometry.contains(point) ].reset_index(drop=True)
+
+    assert user_city.shape[0] == 1
+
+    city_data = {
+
+        "code_muni": user_city.loc[0, "code_muni"],
+        "name_muni": user_city.loc[0, "name_muni"],
+        "name_state": user_city.loc[0, "name_state"],
+        "pop_2019": user_city.loc[0, "pop_2019"],
+        "city_centroid": user_city.loc[0, "geometry"].centroid.coords[0],
+        "would_vanish": True if (user_city.loc[0, "pop_2019"] <= target) else False
+
+    }
+
+    return city_data
 
 def merge_tracts_and_shape(tracts, shp):
     
     return shp.merge(tracts, left_on='CD_GEOCODI', right_on='Cod_setor', how='left')
-
-
-# In[118]:
-
 
 def find_radius(point, tracts, spatial_index, target):
     
@@ -348,21 +367,76 @@ def find_radius(point, tracts, spatial_index, target):
         
     matches = matches[["CD_GEOCODI", "geometry", "population_in_intersection"]]
     
+    # return matches, area
+
     # to_geofeather(matches, f"../output/radiuses/{point}.feather")
     
-    return matches, area
+    radius_data = {
 
+        "inner_point": point.coords[0],
+        "outer_point": area.exterior.coords[0]
 
-# In[140]:
+    }
 
+    return radius_data
 
-def process_input(point):
+def find_neighboring_city(point, target, path_to_centroids):
+
+    '''
+    Returns the city with less population than covid-cases
+    that is nearest to the user input point
+    '''
+
+    city_centroids = from_geofeather(path_to_centroids)
+
+    city_centroids = city_centroids [ city_centroids.pop_2019 <= target ]
+
+    multipoint = city_centroids.unary_union
+
+    source, nearest = nearest_points(point, multipoint)
+
+    nearest = city_centroids [ city_centroids.geometry == nearest ].reset_index(drop=True)
+
+    assert nearest.shape[0] == 1
+
+    neighbor_data = {
+
+        "code_muni": nearest.loc[0, "code_muni"],
+        "name_muni": nearest.loc[0, "name_muni"],
+        "name_state": nearest.loc[0, "name_state"],
+        "pop_2019": nearest.loc[0, "pop_2019"],
+        "city_centroid": nearest.loc[0, "geometry"].coords[0]
+
+    }
+
+    return neighbor_data
+
+def choose_capitals(user_city_id, path_to_capitals):
+    '''
+    Randomly selects two state capitals to highlight.
+    Makes sure its not the user city.
+
+    '''
+    pass
+
+###############
+### WRAPPER ###
+###############
+
+def run_query(point):
+
+    '''
+    Point is an array of two strings
+    representing the lat and lon
+    coordinates of a point in space
+    '''
     
+    # Gets information from the user input
     point = parse_input(point)
-        
-    # TO DO: discover how many covid-19 deaths we have at this point in time
-    target = covid_count()
-            
+
+    # Opens the file with the current count of covid-19 deaths
+    target = get_covid_count(measure='deaths')
+ 
     # Gets the parts of the census tracts with the user data that we need to load
     gdf = find_user_area(point, target)
         
@@ -373,16 +447,39 @@ def process_input(point):
     spatial_index = gdf.sindex
         
     # Finds the area that we will need to highlight along with the respective population
-    matches, area = find_radius(point, gdf, spatial_index, target)
+    radius_data = find_radius(point, gdf, spatial_index, target)
 
-    # TO DO: save output as geofeather
-    pass
+    # Finds informations about the user city
+    city_data = find_user_city(point, target)
+
+    # Finds the closest city with population similar to the total deaths
+    neighbor_data = find_neighboring_city(point, target, "../output/city_centroids.feather")
+
+    # TO DO
+    choose_capitals(point, "path/to/capitals")
+
+    output = {
+
+        "radius": radius_data,
+
+        "user_city": city_data,
+
+        "neighboring_city": neighbor_data
+
+    }
+
+    return output
+
+    # print(radius_data)
+
+    # print(city_data)
+
+    # print(neighbor_data)
+
+    # Returns
 
     # Returns the point and it's respective radius as output
-    # TO DO: for test purposes with Tiago only
-    print(point.coords[0], area.exterior.coords[0])
-    return point.coords[0], area.exterior.coords[0]
-
+    # return point.coords[0], area.exterior.coords[0]
 
 def main(argv):
         
@@ -391,7 +488,7 @@ def main(argv):
         sys.exit(1)
     
     # Gets input from user and turns it into a shapely point
-    return process_input(argv)
+    return run_query(argv)
     
 if __name__ == "__main__":
 
