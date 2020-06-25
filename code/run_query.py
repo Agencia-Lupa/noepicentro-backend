@@ -1,16 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[30]:
-
-
-import multiprocessing
 from geofeather import to_geofeather, from_geofeather
 from shapely.geometry import Point, Polygon
 from shapely.ops import nearest_points
 import pandas as pd
 import geopandas as gpd
-import glob, json, pygeos, random, sys, time
+import glob, json, pprint, pygeos, random, sys, time
 
 pd.options.mode.chained_assignment = None  # default='warn'
 gpd.options.use_pygeos = True
@@ -86,7 +82,7 @@ def get_covid_count(measure='deaths'):
     to that tha we have pre-processed
     '''
     
-    with open("../output/case-count.json") as file:
+    with open("../output/case_count.json") as file:
 
         data = json.load(file)
 
@@ -380,14 +376,14 @@ def find_radius(point, tracts, spatial_index, target):
 
     return radius_data
 
-def find_neighboring_city(point, target, path_to_centroids):
+def find_neighboring_city(point, target):
 
     '''
     Returns the city with less population than covid-cases
     that is nearest to the user input point
     '''
 
-    city_centroids = from_geofeather(path_to_centroids)
+    city_centroids = from_geofeather("../output/city_centroids.feather")
 
     city_centroids = city_centroids [ city_centroids.pop_2019 <= target ]
 
@@ -411,13 +407,21 @@ def find_neighboring_city(point, target, path_to_centroids):
 
     return neighbor_data
 
-def choose_capitals(user_city_id, path_to_capitals):
+def choose_capitals(user_city_id):
     '''
     Randomly selects two state capitals to highlight.
     Makes sure its not the user city.
-
     '''
-    pass
+
+    with open("../output/capitals_radius.json") as file:
+
+        capitals_data = json.load(file)
+
+    capitals_data = [ item for item in capitals_data if item["code_muni"] != user_city_id ]
+
+    capitals_data = random.sample(capitals_data, 2)
+
+    return capitals_data
 
 ###############
 ### WRAPPER ###
@@ -453,10 +457,10 @@ def run_query(point):
     city_data = find_user_city(point, target)
 
     # Finds the closest city with population similar to the total deaths
-    neighbor_data = find_neighboring_city(point, target, "../output/city_centroids.feather")
+    neighbor_data = find_neighboring_city(point, target)
 
-    # TO DO
-    choose_capitals(point, "path/to/capitals")
+    # Selects two random capitals to highlight
+    capitals_data = choose_capitals(city_data["code_muni"])
 
     output = {
 
@@ -464,9 +468,13 @@ def run_query(point):
 
         "user_city": city_data,
 
-        "neighboring_city": neighbor_data
+        "neighboring_city": neighbor_data,
+
+        "capitals_to_highlight": capitals_data
 
     }
+
+    pprint.pprint(output)
 
     return output
 

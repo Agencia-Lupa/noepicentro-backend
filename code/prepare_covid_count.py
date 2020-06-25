@@ -47,7 +47,7 @@ def get_covid_count(source, fpath):
 
     def save(data, fpath):
         
-        fname = f"{fpath}case-count.json"
+        fname = f"{fpath}case_count.json"
 
         with open(fname, "w+") as file:
 

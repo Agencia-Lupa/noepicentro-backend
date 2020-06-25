@@ -1,5 +1,5 @@
 '''
-This script will be runned through a cron job and 
+This script will run through a cron job and 
 will upadate the dynamic data od the application
 daily
 '''
