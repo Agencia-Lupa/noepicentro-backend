@@ -6,7 +6,7 @@ This script is similar to prepare_tracts.py, but slightly altered
 to do the same for city outlines.
 '''
 
-from geofeather import to_geofeather, from_geofeather
+#from geofeather import to_geofeather, from_geofeather
 from shapely.geometry import Polygon, MultiPolygon, LineString
 from shapely.ops import split
 import geopandas as gpd
@@ -185,7 +185,7 @@ def split_tracts(row, output_dir, sindex, tracts):
         # If relevant, saves
         if matches.shape[0] != 0:
             
-            to_geofeather(matches, fpath)
+            matches.to_feather(fpath)
             
         return pd.Series({
             "fpath": fpath,
@@ -260,7 +260,7 @@ def main():
     
     bboxes[['neighbors', 'neighbor_count']] = bboxes.apply(find_neighbors, args=[bboxes], axis=1)    
 
-    to_geofeather(bboxes, "../output/index_city_bboxes.feather")
+    bboxes.to_feather("../output/index_city_bboxes.feather")
     
     return bboxes
 

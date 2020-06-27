@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-from geofeather import to_geofeather, from_geofeather
+#from geofeather.pygeos import to_geofeather, from_geofeather
 from shapely.geometry import Point, Polygon
 from shapely.ops import nearest_points
 import pandas as pd
@@ -108,7 +108,7 @@ def find_user_area(point, target):
     
     # Loads the quadrant data
     
-    reference_map = from_geofeather("../output/index_tracts_bboxes.feather")
+    reference_map = gpd.read_feather("../output/index_tracts_bboxes.feather")
        
     # Finds in which quadrant the point falls
     
@@ -162,7 +162,7 @@ def find_user_area(point, target):
         
         fpath = row.fpath
         
-        gdf = from_geofeather(fpath)
+        gdf = gpd.read_feather(fpath)
         
         gdfs.append(gdf)
         
@@ -176,7 +176,7 @@ def find_user_city(point, target):
 
     # Loads the quadrant data
     
-    reference_map = from_geofeather("../output/index_city_bboxes.feather")
+    reference_map = gpd.read_feather("../output/index_city_bboxes.feather")
        
     # Finds in which quadrant the point falls
     
@@ -184,7 +184,7 @@ def find_user_city(point, target):
 
     assert quadrant.shape[0] == 1
 
-    quadrant = from_geofeather(quadrant.loc[0, "fpath"])
+    quadrant = gpd.read_feather(quadrant.loc[0, "fpath"])
 
     # Find in which city of the quadrant the point falls in
 
@@ -365,7 +365,7 @@ def find_radius(point, tracts, spatial_index, target):
     
     # return matches, area
 
-    # to_geofeather(matches, f"../output/radiuses/{point}.feather")
+    #matches.to_feather(f"../output/radiuses/{point}.feather")
     
     radius_data = {
 
@@ -383,7 +383,7 @@ def find_neighboring_city(point, target):
     that is nearest to the user input point
     '''
 
-    city_centroids = from_geofeather("../output/city_centroids.feather")
+    city_centroids = gpd.read_feather("../output/city_centroids.feather")
 
     city_centroids = city_centroids [ city_centroids.pop_2019 <= target ]
 
@@ -474,7 +474,7 @@ def run_query(point):
 
     }
 
-    pprint.pprint(output)
+    #pprint.pprint(output)
 
     return output
 

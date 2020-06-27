@@ -5,7 +5,7 @@ Brazilian city as a geofeather file
 
 import geopandas as gpd
 import pandas as pd
-from geofeather import to_geofeather
+#from geofeather import to_geofeather
 
 def read_shapes(source):
 
@@ -93,7 +93,7 @@ def get_centroids(gdf):
 
 def save_file(gdf, fpath):
 
-	to_geofeather(gdf, fpath)
+	gdf.to_feather(fpath)
 
 def main():
 

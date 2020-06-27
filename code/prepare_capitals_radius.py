@@ -6,7 +6,6 @@ to a JSON file
 
 from run_query import run_query
 import json
-from pprint import pprint
 
 def compute(capitals_data):
 

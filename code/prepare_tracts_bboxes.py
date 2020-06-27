@@ -7,7 +7,7 @@ for better performance when computing the affected area in the main
 script
 '''
 
-from geofeather import to_geofeather, from_geofeather
+#from geofeather import to_geofeather, from_geofeather
 from shapely.geometry import Polygon, MultiPolygon, LineString
 from shapely.ops import split
 import geopandas as gpd
@@ -185,7 +185,7 @@ def split_tracts(row, output_dir, sindex, tracts):
         # If relevant, saves
         if matches.shape[0] != 0:
             
-            to_geofeather(matches, fpath)
+            matches.to_feather(fpath)
             
         return pd.Series({
             "fpath": fpath,
@@ -209,7 +209,9 @@ def main():
         
     df, gdf = read_data("../data/tracts_basic_data.csv","../data/geo_data/setores_censitarios_shp_reduzido/")
     
-    gdf = merge_tracts_and_shape(df, gdf)    
+    gdf = merge_tracts_and_shape(df, gdf)
+
+    gdf.to_feather("../output/setores_censitarios.feather")    
     
     gdf.geometry = gdf.geometry.buffer(0)
         
@@ -265,7 +267,7 @@ def main():
     
     bboxes[['neighbors', 'neighbor_count']] = bboxes.apply(find_neighbors, args=[bboxes], axis=1)    
 
-    to_geofeather(bboxes, "../output/index_tracts_bboxes.feather")
+    bboxes.to_feather("../output/index_tracts_bboxes.feather")
     
     return bboxes
 
