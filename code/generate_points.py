@@ -98,8 +98,6 @@ def create_random_points(gdf):
 		    points.append(point)
 		    
 		points = [ point for point in points if polygon.contains(point)]
-
-		# print(points)
 		        
 		points = gpd.GeoDataFrame(geometry=points)
 
@@ -123,7 +121,7 @@ def create_random_points(gdf):
 
 def parallelize(gdf, func):
 
-	n_cores = 8#cpu_count()
+	n_cores = cpu_count()
 
 	gdf = np.array_split(gdf, n_cores)
 
