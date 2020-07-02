@@ -24,5 +24,5 @@ _Basicamente, precisamos dos seguintes pacotes: shapely, fiona, rtree, pygeos, g
 #### TO DO LIST:
 
 [] Melhorar instruções de como instalar o GeoPandas/PyGEOS
-[] Implementar o cálculo de raio nas capitais
-[] Tentar gerar os pontos do mapa via backend
+[] Documentar a geração de pontos no README.
+[] Colocar a geração de pontos no prepare.py (?)

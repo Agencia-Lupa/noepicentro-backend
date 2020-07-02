@@ -4,18 +4,37 @@ for each capital in the country and saves it
 to a JSON file
 '''
 
-from run_query import run_query
+from run_query import parse_input, get_covid_count, find_user_area, find_radius
+import geopandas as gpd
 import json
 
 def compute(capitals_data):
 
-	for index, capital in enumerate(capitals_data):
+    target = get_covid_count(measure='deaths')
 
-		output = run_query(capital["input_point"])
+    for index, capital in enumerate(capitals_data):
 
-		capitals_data[index]["radius"] = output["radius"]
+        point = capital["input_point"]
 
-	return capitals_data
+        point = parse_input(point)
+ 
+        gdf = find_user_area(point, target)
+            
+        gdf["geometry"] = gdf.geometry.buffer(0)
+            
+        spatial_index = gdf.sindex
+            
+        radius_data = find_radius(point, gdf, spatial_index, target)
+
+        output = {
+
+            "radius": radius_data
+
+        }
+
+        capitals_data[index]["radius"] = output["radius"]
+
+    return capitals_data
 
 def save(data, fpath):
     
@@ -26,58 +45,58 @@ def save(data, fpath):
         json.dump(data, file)
 
 def main():
-	
+    
 
-	capitals_data = [ 
+    capitals_data = [ 
 
-		{
+        {
 
-			"code_muni": "431490", # First six IBGE digits
+            "code_muni": "431490", # First six IBGE digits
 
-			"name_muni": "Porto Alegre",
+            "name_muni": "Porto Alegre",
 
-			"name_state": "RS",
+            "name_state": "RS",
 
-			"display_text": "da Usina do Gasômetro",
+            "display_text": "da Usina do Gasômetro",
 
-			"input_point": ["-30.0341319", "-51.2432707"]
+            "input_point": ["-30.0341319", "-51.2432707"]
 
-		},
+        },
 
-		{
+        {
 
-			"code_muni": "355030",
+            "code_muni": "355030",
 
-			"name_muni": "São Paulo",
+            "name_muni": "São Paulo",
 
-			"name_state": "SP",
+            "name_state": "SP",
 
-			"display_text": "do MASP",
+            "display_text": "do MASP",
 
-			"input_point": ["-23.5628876", "-46.6504141"]
+            "input_point": ["-23.5628876", "-46.6504141"]
 
-		},
+        },
 
-		{
+        {
 
-			"code_muni": "330455",
+            "code_muni": "330455",
 
-			"name_muni": "Rio de Janeiro",
+            "name_muni": "Rio de Janeiro",
 
-			"name_state": "RJ",
+            "name_state": "RJ",
 
-			"display_text": "do Maracanã",
+            "display_text": "do Maracanã",
 
-			"input_point": ["-22.9120302", "-43.2319878"]
+            "input_point": ["-22.9120302", "-43.2319878"]
 
-		},
+        },
 
-	]
+    ]
 
 
-	compute(capitals_data)
+    compute(capitals_data)
 
-	save(capitals_data, "../output/")
+    save(capitals_data, "../output/")
 
 if __name__ == "__main__":
-	main()
+    main()

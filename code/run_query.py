@@ -429,11 +429,6 @@ def choose_capitals(user_city_id):
 
 def run_query(point):
 
-    '''
-    Point is an array of two strings
-    representing the lat and lon
-    coordinates of a point in space
-    '''
     
     # Gets information from the user input
     point = parse_input(point)
@@ -474,20 +469,8 @@ def run_query(point):
 
     }
 
-    #pprint.pprint(output)
-
     return output
 
-    # print(radius_data)
-
-    # print(city_data)
-
-    # print(neighbor_data)
-
-    # Returns
-
-    # Returns the point and it's respective radius as output
-    # return point.coords[0], area.exterior.coords[0]
 
 def main(argv):
         
