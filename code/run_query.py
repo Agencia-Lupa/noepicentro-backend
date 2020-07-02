@@ -6,60 +6,16 @@ from shapely.geometry import Point, Polygon
 from shapely.ops import nearest_points
 import pandas as pd
 import geopandas as gpd
-import glob, json, pprint, pygeos, random, sys, time
+import glob, json, pygeos, random, sys, time, warnings
 
 pd.options.mode.chained_assignment = None  # default='warn'
 gpd.options.use_pygeos = True
+warnings.filterwarnings(action = "ignore", 
+                        category = UserWarning)
 
 ###############
 ### HELPERS ###
 ###############
-
-# def read_data(path_to_tracts, path_to_shp):
-    
-#     dtype = { 
-        
-#         "CD_GEOCODI": str,
-#         "CD_GEOCODM": str,
-#         "CD_MUNICIP": str,
-#         "Cod_setor": str
-        
-#     }
-    
-#     tracts = pd.read_csv(path_to_tracts, dtype=dtype)
-    
-#     shp = gpd.read_file(path_to_shp, dtype=dtype)
-    
-#     return tracts, shp
-
-# def random_points(n=1):
-    
-#     '''
-#     Generates n random points in the country
-#     '''
-    
-#     # Load the outline of Brazil
-#     polygon = gpd.read_file("../data/malha_brasil/malha.json")
-    
-#     polygon = polygon.loc[0, 'geometry']
-        
-#     # Get's its bounding box
-#     minx, miny, maxx, maxy = polygon.bounds
-    
-#     # Generates a random point within the bounding box
-#     # untill it falls within the country
-    
-#     points = [ ]
-    
-#     while len(points) < n:
-        
-#         point = Point(random.uniform(minx, maxx), random.uniform(miny, maxy))
-        
-#         if polygon.contains(point):
-            
-#             points.append(point)
-            
-#     return points
 
 def parse_input(argv):
     
@@ -197,7 +153,7 @@ def find_user_city(point, target):
         "code_muni": user_city.loc[0, "code_muni"],
         "name_muni": user_city.loc[0, "name_muni"],
         "name_state": user_city.loc[0, "name_state"],
-        "pop_2019": user_city.loc[0, "pop_2019"],
+        "pop_2019": int(user_city.loc[0, "pop_2019"]),
         "city_centroid": user_city.loc[0, "geometry"].centroid.coords[0],
         "would_vanish": True if (user_city.loc[0, "pop_2019"] <= target) else False
 
@@ -400,7 +356,7 @@ def find_neighboring_city(point, target):
         "code_muni": nearest.loc[0, "code_muni"],
         "name_muni": nearest.loc[0, "name_muni"],
         "name_state": nearest.loc[0, "name_state"],
-        "pop_2019": nearest.loc[0, "pop_2019"],
+        "pop_2019": int(nearest.loc[0, "pop_2019"]),
         "city_centroid": nearest.loc[0, "geometry"].coords[0]
 
     }
