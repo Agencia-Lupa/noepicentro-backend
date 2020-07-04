@@ -23,21 +23,21 @@ def get_covid_count(source, fpath):
 
         r = requests.get(source)
 
-        return StringIO(r.text)
+        return r.json()
 
     def read_data(data):
         
-        return pd.read_csv(data)
+        return pd.DataFrame(data["results"])
 
     def compute(data, measure):
-        
+
         if measure == 'deaths':
 
-            total = data.last_available_deaths.sum()
+            total = data.deaths.sum()
 
         elif measure == 'cases':
 
-            total = data.last_available_confirmed.sum()
+            total = data.confirmed.sum()
 
 
         else:
@@ -76,7 +76,7 @@ def get_covid_count(source, fpath):
 def main():
 
     get_covid_count(
-        source = "https://brasil.io/dataset/covid19/caso_full/?place_type=state&is_last=True&format=csv", 
+        source = "https://brasil.io/api/dataset/covid19/caso/data/?search=&date=&state=&city=&place_type=state&is_last=True&city_ibge_code=&order_for_place=", 
         fpath = "../output/"
     )
 
