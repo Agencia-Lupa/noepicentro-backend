@@ -6,7 +6,7 @@ that are independent from user input:
 - Saves a JSON object with the radius data for each one of the 27 state capitals
 '''
 
-import json, requests
+import gzip, json, requests
 import pandas as pd
 from datetime import datetime
 from io import StringIO
@@ -23,11 +23,25 @@ def get_covid_count(source, fpath):
 
         r = requests.get(source)
 
-        return r.json()
+        with open("../output/brasil-io-cases.csv.gz", 'wb') as f:
 
-    def read_data(data):
+            for chunk in r.iter_content(chunk_size=1024):
+
+                if chunk:
+
+                    f.write(chunk)
+
+                    f.flush()
+
+    def read_data():
+
+        df = pd.read_csv("../output/brasil-io-cases.csv.gz", encoding="Latin5")
+
+        df = df [ df.is_last ]
+
+        df = df [ df.place_type == "city" ]
         
-        return pd.DataFrame(data["results"])
+        return df
 
     def compute(data, measure):
 
@@ -53,21 +67,25 @@ def get_covid_count(source, fpath):
 
             json.dump(data, file)
 
-    data = download(source)
+    download(source)
 
-    data = read_data(data)
+    data = read_data()
 
     deaths = compute(data, measure='deaths')
 
     cases = compute(data, measure='cases')
 
+    vanishing_cities = data [ data.estimated_population_2019 < cases ].shape[0]
+
     data = {
 
-      "time": datetime.now().strftime("%d-%m-%Y-%H-%M-%S"),
+      "time": str(data.date.max()),
 
       "deaths": int(deaths),
 
-      "cases": int(cases)
+      "cases": int(cases),
+
+      "vanishing_cities": int(vanishing_cities)
 
     }
 
@@ -76,7 +94,7 @@ def get_covid_count(source, fpath):
 def main():
 
     get_covid_count(
-        source = "https://brasil.io/api/dataset/covid19/caso/data/?search=&date=&state=&city=&place_type=state&is_last=True&city_ibge_code=&order_for_place=", 
+        source = "https://data.brasil.io/dataset/covid19/caso.csv.gz",
         fpath = "../output/"
     )
 
