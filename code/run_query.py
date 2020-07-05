@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-#from geofeather.pygeos import to_geofeather, from_geofeather
 from shapely.geometry import Point, Polygon
 from shapely.ops import nearest_points
 import pandas as pd
@@ -332,14 +331,12 @@ def find_radius(point, tracts, spatial_index, target):
 
     return radius_data
 
-def find_neighboring_city(point, target):
+def find_neighboring_city(point, target, city_centroids):
 
     '''
     Returns the city with less population than covid-cases
     that is nearest to the user input point
     '''
-
-    city_centroids = gpd.read_feather("../output/city_centroids.feather")
 
     city_centroids = city_centroids [ city_centroids.pop_2019 <= target ]
 
@@ -363,7 +360,7 @@ def find_neighboring_city(point, target):
 
     return neighbor_data
 
-def choose_capitals(user_city_id):
+def choose_capitals(point, user_city_id, city_centroids):
     '''
     Randomly selects two state capitals to highlight.
     Makes sure its not the user city.
@@ -371,13 +368,36 @@ def choose_capitals(user_city_id):
 
     with open("../output/capitals_radius.json") as file:
 
-        capitals_data = json.load(file)
+        choices = json.load(file)
 
-    capitals_data = [ item for item in capitals_data if item["code_muni"] != user_city_id ]
+    # Don't select user city
+    choices = [ item for item in choices if item["code_muni"] != user_city_id ]
 
-    capitals_data = random.sample(capitals_data, 2)
 
-    return capitals_data
+    # First is the nearest capital
+
+    capital_centroids = city_centroids [ city_centroids.code_muni.isin([ item["code_muni"] for item in choices])]
+
+    multipoint = capital_centroids.unary_union
+
+    source, nearest = nearest_points(point, multipoint)
+
+    nearest = city_centroids [ city_centroids.geometry == nearest ].reset_index(drop=True)
+
+    assert nearest.shape[0] == 1
+
+    nearest = nearest.loc[0, "code_muni"]
+
+    first_capital = next(item for item in choices if item["code_muni"] == nearest)
+
+    # Remove selection from choices
+    choices = [ item for item in choices if item["code_muni"] != nearest ]
+
+    # Second is randomly selected among the remaining options
+    second_capital = random.sample(choices, 1)
+
+    # Returns selection as list
+    return [ first_capital, second_capital ]
 
 ###############
 ### WRAPPER ###
@@ -408,10 +428,12 @@ def run_query(point):
     city_data = find_user_city(point, target)
 
     # Finds the closest city with population similar to the total deaths
-    neighbor_data = find_neighboring_city(point, target)
+    city_centroids = gpd.read_feather("../output/city_centroids.feather")
+
+    neighbor_data = find_neighboring_city(point, target, city_centroids)
 
     # Selects two random capitals to highlight
-    capitals_data = choose_capitals(city_data["code_muni"])
+    capitals_data = choose_capitals(point, city_data["code_muni"], city_centroids)
 
     output = {
 
