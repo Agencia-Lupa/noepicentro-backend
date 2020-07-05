@@ -145,7 +145,7 @@ def main():
 
             "name_state": "GO",
 
-            "display_text": "Monumento às Três Raças",
+            "display_text": "do Monumento às Três Raças",
 
             "complement": "no setor central do município",
 
@@ -163,7 +163,7 @@ def main():
 
             "name_state": "BA",
 
-            "display_text": "Elevador Lacerda",
+            "display_text": "do Elevador Lacerda",
 
             "complement": "cartão postal da região",
 
@@ -179,7 +179,7 @@ def main():
 
             "name_state": "CE",
 
-            "display_text": "Praça do Ferreira",
+            "display_text": "da Praça do Ferreira",
 
             "complement": "conhecida como \"coração da cidade\"",
 
@@ -197,7 +197,7 @@ def main():
 
             "name_state": "AM",
 
-            "display_text": "Teatro Amazonas",
+            "display_text": "do Teatro Amazonas",
 
             "complement": "centro cultural de fama internacional",
 
@@ -213,7 +213,7 @@ def main():
 
             "name_state": "PA",
 
-            "display_text": "Mercado Ver-o-Peso",
+            "display_text": "do Mercado Ver-o-Peso",
 
             "complement": "na margem da Baía do Guajará",
 
