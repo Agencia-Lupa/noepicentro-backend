@@ -73,6 +73,10 @@ Esse diretório contém os scripts que processam os dados necessários para o fu
 
 - **update.py**: script que encapsula as funções de e `prepare_capitals_radius.py` e `prepare_covid_count.py`, de forma a atualizar periodicamente os dados estáticos do alicativo.
 
+### Diretório `data`
+
+Contém informações sobre a divisão do país em setores censitários. Esses arquivos serão pré-processados para permitir que a execução aconteça de forma mais rápida.
+
 ## Metodologia detalhada
 
 O algoritmo que calcula as informações exibidas para o usuário foi implementado no arquivo `run_query.py`. Confira abaixo uma descrição passo-a-passo do processo:
