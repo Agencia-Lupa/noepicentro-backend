@@ -85,11 +85,13 @@ def merge(gdf, df):
 
 	return gdf
 
+
 def get_centroids(gdf):
 
 	gdf.geometry = gdf.geometry.centroid
 
 	return gdf
+
 
 def save_file(gdf, fpath):
 

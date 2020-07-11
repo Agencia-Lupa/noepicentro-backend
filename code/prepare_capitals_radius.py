@@ -139,7 +139,7 @@ def main():
 
         {
 
-            "code_muni": "260620",
+            "code_muni": "520870",
 
             "name_muni": "Goiânia",
 

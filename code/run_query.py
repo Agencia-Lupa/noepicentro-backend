@@ -338,6 +338,7 @@ def find_neighboring_city(point, target, city_centroids):
     that is nearest to the user input point
     '''
 
+    # TO DO: implementar por fora da função
     city_centroids = city_centroids [ city_centroids.pop_2019 <= target ]
 
     multipoint = city_centroids.unary_union
