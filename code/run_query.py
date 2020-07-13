@@ -123,7 +123,7 @@ def find_user_area(point, target):
         
     return pd.concat(gdfs)
 
-def find_user_city(point, target):
+def find_user_city(point, target, cities_info):
     '''
     Finds and loads the bounding box which contains
     the user city and retrieves its data
@@ -142,19 +142,35 @@ def find_user_city(point, target):
     quadrant = gpd.read_feather(quadrant.loc[0, "fpath"])
 
     # Find in which city of the quadrant the point falls in
-
-    user_city = quadrant[ quadrant.geometry.contains(point) ].reset_index(drop=True)
+    user_city_code = quadrant[ quadrant.geometry.contains(point) ].reset_index(drop=True).loc[0, "code_muni"]
+    user_city = cities_info [ cities_info.code_muni == user_city_code].reset_index()
 
     assert user_city.shape[0] == 1
 
+    # Takes the specific datapoint
+    user_city = user_city.loc[0]
+
+    # Extracts data
+    code_muni = user_city["code_muni"]
+    name_muni = user_city["name_muni"]
+    name_state = user_city["name_muni"]
+    pop_2019 = int(user_city["pop_2019"])
+    city_centroid = user_city["geometry"].centroid.coords[0]
+    miny = user_city["miny"]
+    maxy = user_city["maxy"]
+    minx = user_city["minx"]
+    maxx = user_city["maxx"]
+
+
     city_data = {
 
-        "code_muni": user_city.loc[0, "code_muni"],
-        "name_muni": user_city.loc[0, "name_muni"],
-        "name_state": user_city.loc[0, "name_state"],
-        "pop_2019": int(user_city.loc[0, "pop_2019"]),
-        "city_centroid": user_city.loc[0, "geometry"].centroid.coords[0],
-        "would_vanish": True if (user_city.loc[0, "pop_2019"] <= target) else False
+        "code_muni": code_muni,
+        "name_muni": name_muni,
+        "name_state": name_state,
+        "pop_2019": pop_2019,
+        "city_centroid": city_centroid,
+        "bbox":[ (miny, maxy), (minx, maxx) ],
+        "would_vanish": True if (pop_2019 <= target) else False
 
     }
 
@@ -315,9 +331,7 @@ def find_radius(point, tracts, spatial_index, target):
     
             fine_tune = fine_tune / 2
      
-        
-    matches = matches[["CD_GEOCODI", "geometry", "population_in_intersection"]]
-    
+            
     # return matches, area
 
     #matches.to_feather(f"../output/radiuses/{point}.feather")
@@ -331,37 +345,52 @@ def find_radius(point, tracts, spatial_index, target):
 
     return radius_data
 
-def find_neighboring_city(point, target, city_centroids):
+def find_neighboring_city(point, target, cities_info):
 
     '''
     Returns the city with less population than covid-cases
     that is nearest to the user input point
     '''
 
-    # TO DO: implementar por fora da função
-    city_centroids = city_centroids [ city_centroids.pop_2019 <= target ]
+    cities_info = cities_info [ cities_info.pop_2019 <= target ]
 
-    multipoint = city_centroids.unary_union
+    multipoint = cities_info.unary_union
 
     source, nearest = nearest_points(point, multipoint)
 
-    nearest = city_centroids [ city_centroids.geometry == nearest ].reset_index(drop=True)
+    nearest = cities_info [ cities_info.geometry == nearest ].reset_index(drop=True)
 
     assert nearest.shape[0] == 1
 
+    # Fetches the data
+    nearest = nearest.loc[0]
+
+    code_muni = nearest['code_muni']
+    name_muni = nearest['name_muni']
+    name_state = nearest['name_state']
+    pop_2019 = int(nearest['pop_2019'])
+    city_centroid = nearest['geometry'].coords[0]
+
+    # Gets bounding box data for this city
+    miny = nearest["miny"]
+    maxy = nearest["maxy"]
+    minx = nearest["minx"]
+    maxx = nearest["maxx"]
+
     neighbor_data = {
 
-        "code_muni": nearest.loc[0, "code_muni"],
-        "name_muni": nearest.loc[0, "name_muni"],
-        "name_state": nearest.loc[0, "name_state"],
-        "pop_2019": int(nearest.loc[0, "pop_2019"]),
-        "city_centroid": nearest.loc[0, "geometry"].coords[0]
+        "code_muni": code_muni,
+        "name_muni": name_muni,
+        "name_state": name_state,
+        "pop_2019": pop_2019,
+        "city_centroid": city_centroid,
+        "bbox":[ (miny, maxy), (minx, maxx) ]
 
     }
 
     return neighbor_data
 
-def choose_capitals(point, user_city_id, city_centroids):
+def choose_capitals(point, user_city_id, cities_info):
     '''
     Randomly selects two state capitals to highlight.
     Makes sure its not the user city.
@@ -374,16 +403,15 @@ def choose_capitals(point, user_city_id, city_centroids):
     # Don't select user city
     choices = [ item for item in choices if item["code_muni"] != user_city_id ]
 
-
     # First is the nearest capital
+    capitals_info = cities_info [ cities_info.code_muni.isin([ item["code_muni"] for item in choices])]
 
-    capital_centroids = city_centroids [ city_centroids.code_muni.isin([ item["code_muni"] for item in choices])]
-
-    multipoint = capital_centroids.unary_union
+    # Note that the geometry column is a Point item refering to the centroids
+    multipoint = capitals_info.unary_union
 
     source, nearest = nearest_points(point, multipoint)
 
-    nearest = city_centroids [ city_centroids.geometry == nearest ].reset_index(drop=True)
+    nearest = capitals_info [ capitals_info.geometry == nearest ].reset_index(drop=True)
 
     assert nearest.shape[0] == 1
 
@@ -412,7 +440,9 @@ def run_query(point):
 
     # Opens the file with the current count of covid-19 deaths
     target = get_covid_count(measure='deaths')
- 
+
+    cities_info = gpd.read_feather("../output/city_info.feather")
+
     # Gets the parts of the census tracts with the user data that we need to load
     gdf = find_user_area(point, target)
         
@@ -426,15 +456,13 @@ def run_query(point):
     radius_data = find_radius(point, gdf, spatial_index, target)
 
     # Finds informations about the user city
-    city_data = find_user_city(point, target)
+    city_data = find_user_city(point, target, cities_info)
 
     # Finds the closest city with population similar to the total deaths
-    city_centroids = gpd.read_feather("../output/city_centroids.feather")
-
-    neighbor_data = find_neighboring_city(point, target, city_centroids)
+    neighbor_data = find_neighboring_city(point, target, cities_info)
 
     # Selects two random capitals to highlight
-    capitals_data = choose_capitals(point, city_data["code_muni"], city_centroids)
+    capitals_data = choose_capitals(point, city_data["code_muni"], cities_info)
 
     output = {
 

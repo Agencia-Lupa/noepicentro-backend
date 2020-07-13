@@ -118,7 +118,6 @@ def create_random_points(gdf):
     # Compute the points and save each tract to a file
 	gdf.apply(create_random_points_, axis=1)
 
-
 def parallelize(gdf, func):
 
 	n_cores = cpu_count()
@@ -132,7 +131,6 @@ def parallelize(gdf, func):
 	pool.close()
 
 	pool.join()
-
 
 def main():
 

@@ -1,11 +1,17 @@
 '''
-This scripts saves the centroids of each
-Brazilian city as a geofeather file
+This scripts saves the centroids of the
+Brazilian cities in geofeather file, as well
+as a bounding box for its polygons
 '''
 
 import geopandas as gpd
 import pandas as pd
-#from geofeather import to_geofeather
+import warnings 
+
+warnings.filterwarnings('ignore', message='.*initial implementation of Parquet.*')
+warnings.filterwarnings('ignore', message='.*to re-project geometries to a projected CRS before this operation.')
+
+
 
 def read_shapes(source):
 
@@ -85,6 +91,11 @@ def merge(gdf, df):
 
 	return gdf
 
+def get_bbox(gdf):
+
+	gdf[["minx", "miny", "maxx", "maxy"]] = gdf.geometry.bounds
+
+	return gdf
 
 def get_centroids(gdf):
 
@@ -109,9 +120,11 @@ def main():
 
 	save_file(gdf, "../output/city_outlines.feather")
 
+	gdf = get_bbox(gdf)
+
 	gdf = get_centroids(gdf)
 
-	save_file(gdf, "../output/city_centroids.feather")
+	save_file(gdf, "../output/city_info.feather")
 
 if __name__ == "__main__":
 	

@@ -35,8 +35,12 @@ def read_data(path_to_tracts, path_to_shp):
     }
     
     tracts = pd.read_csv(path_to_tracts, dtype=dtype)
+    tracts = tracts.drop("Unnamed: 0", axis=1)
     
     shp = gpd.read_file(path_to_shp, dtype=dtype)
+    shp = shp.drop(["CD_GEOCODB", "CD_GEOCODS", "CD_GEOCODD", "CD_GEOCODM"], axis=1)
+    shp = shp.rename(columns={"CD_GEOCODI": "Cod_setor"})
+
     
     return tracts, shp
 
@@ -51,7 +55,7 @@ def merge_tracts_and_shape(tracts, shp):
     Returns a geodataframe.
     '''
     
-    return shp.merge(tracts, left_on='CD_GEOCODI', right_on='Cod_setor', how='left')
+    return shp.merge(tracts, how='left')
 
 
 
@@ -206,17 +210,22 @@ def split_tracts(row, output_dir, sindex, tracts):
 
 
 def main():    
-        
+
+    # Reads and processes the data
     df, gdf = read_data("../data/tracts_basic_data.csv","../data/geo_data/setores_censitarios_shp_reduzido/")
     
     gdf = merge_tracts_and_shape(df, gdf)
 
-    gdf.to_feather("../output/setores_censitarios.feather")    
+    gdf = gdf.drop("Cod_setor", axis=1) # We won't need tract ids after the merge
+
+    # gdf.to_feather("../output/setores_censitarios.feather")    
     
     gdf.geometry = gdf.geometry.buffer(0)
         
     sindex = gdf.sindex
-        
+
+
+    # Splits the country and tracts in bounding boxes
     brazil_bbox = Polygon([
         [-74.3143068749,-34.2970741167],
         [-34.4119631249,-34.2970741167],
@@ -231,9 +240,10 @@ def main():
     bboxes = gpd.GeoDataFrame(geometry=bboxes).reset_index().rename(columns={'index':'id_no'})
     
     bboxes.crs = gdf.crs
+
+    # Save a file for each bounding box and its tracts
             
     # Make sure that the output directory is empty, avoiding overwrites
-
     directory =  "../output/setores_censitarios_divididos_feather/"
 
     if not os.path.exists(directory):
@@ -248,25 +258,18 @@ def main():
     # Splits the tracts in bboxes, extracting the relevant information
     # Note that the function also saves files to the directory and
     # adjusts the population according to the intersections
-
     new_data = bboxes.apply(split_tracts, args=[directory, sindex, gdf], axis=1)
-        
+
     bboxes['fpath'] = new_data["fpath"]
-    
     bboxes['total_population'] = new_data["total_population"]
         
     # Remove from the data table all the bounding boxes that contain no tracts
-    
     saved_files = glob.glob(directory + "*.feather")
-        
     meaningful_bboxes = [ int(re.search('bbox\-(\d+)\.feather', file).group(1)) for file in saved_files ]
-    
     bboxes = bboxes.loc[meaningful_bboxes].reset_index(drop=True)
 
     # Finds the neighbors and counts
-    
     bboxes[['neighbors', 'neighbor_count']] = bboxes.apply(find_neighbors, args=[bboxes], axis=1)    
-
     bboxes.to_feather("../output/index_tracts_bboxes.feather")
     
     return bboxes

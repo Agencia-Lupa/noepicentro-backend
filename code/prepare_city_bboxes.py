@@ -42,17 +42,17 @@ def read_data(path_to_info, path_to_shp):
     
     shp = gpd.read_file(path_to_shp, dtype=dtype)
 
+    # Remove the columns that we don't need
+    shp = shp.drop(["AREA_KM2", "NM_MUN", "SIGLA_UF"], axis=1)
+
     shp = shp.rename(columns={
 
         "CD_MUN": "code_muni",
-        "NM_MUN": "name_muni",
-        "SIGLA_UF": "name_state"
 
     })
 
     shp.code_muni = shp.code_muni.str.extract("(\d{6})")
 
-    shp = shp.drop("AREA_KM2", axis=1)
 
     return info, shp
 
@@ -69,8 +69,6 @@ def merge_info_and_shape(info, shp):
     shp = shp.drop([column for column in shp.columns if "__y" in column], axis=1)
 
     return shp
-
-
 
 def divide_bbox(rectangle, nrows, ncols): 
     '''
@@ -97,9 +95,6 @@ def divide_bbox(rectangle, nrows, ncols):
 
     return [ split_rectangle for split_rectangle in rectangle ]
 
-
-
-
 def find_neighbors(row, gdf):
     '''
     Finds all the polygons in the GeoDataFrame
@@ -117,8 +112,6 @@ def find_neighbors(row, gdf):
         "neighbor_count": neighbor_count
     })
 
-
-
 def find_intersections(tracts, spatial_index, area):
     '''
     Finds all the polygons that intersect a given area
@@ -133,7 +126,6 @@ def find_intersections(tracts, spatial_index, area):
     matches = nearby_tracts [ nearby_tracts.geometry.intersects(area)]
 
     return matches
-
 
 def compute_new_geometries(matches, area):
     '''
@@ -151,10 +143,9 @@ def compute_new_geometries(matches, area):
 
     matches['geometry'] = intersection
 
-    return matches.reset_index(drop=True)
+    matches = matches.reset_index(drop=True)
 
-
-
+    return matches
 
 def split_tracts(row, output_dir, sindex, tracts):
     '''
@@ -248,18 +239,15 @@ def main():
         
     bboxes['fpath'] = new_data["fpath"]
             
-    # Remove from the data table all the bounding boxes that contain no tracts
-    
+    # Remove from the df all the bounding boxes that contain no tracts - that is, that weren't saved
     saved_files = glob.glob(directory + "*.feather")
-        
     meaningful_bboxes = [ int(re.search('bbox\-(\d+)\.feather', file).group(1)) for file in saved_files ]
-    
     bboxes = bboxes.loc[meaningful_bboxes].reset_index(drop=True)
 
-    # Finds the neighbors and counts
-    
+    # Finds the neighbors and counts them
     bboxes[['neighbors', 'neighbor_count']] = bboxes.apply(find_neighbors, args=[bboxes], axis=1)    
 
+    # Saves an index
     bboxes.to_feather("../output/index_city_bboxes.feather")
     
     return bboxes
