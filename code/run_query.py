@@ -169,7 +169,7 @@ def find_user_city(point, target, cities_info):
         "name_state": name_state,
         "pop_2019": pop_2019,
         "city_centroid": city_centroid,
-        "bbox":[ (miny, maxy), (minx, maxx) ],
+        "bbox":[ (minx, miny), (maxx, maxy) ],
         "would_vanish": True if (pop_2019 <= target) else False
 
     }
@@ -384,7 +384,7 @@ def find_neighboring_city(point, target, cities_info):
         "name_state": name_state,
         "pop_2019": pop_2019,
         "city_centroid": city_centroid,
-        "bbox":[ (miny, maxy), (minx, maxx) ]
+        "bbox":[ (minx, miny), (maxx, maxy) ]
 
     }
 
