@@ -458,8 +458,14 @@ def run_query(point):
     # Finds informations about the user city
     city_data = find_user_city(point, target, cities_info)
 
-    # Finds the closest city with population similar to the total deaths
-    neighbor_data = find_neighboring_city(point, target, cities_info)
+    # If the user city has less population than covid deaths,
+    # the closest city that would vanish is itself
+    if city_data["pop_2019"] <= target:
+        neighbor_data = city_data.copy()
+
+    # Else, finds the closest city with population smaller to the total deaths
+    else:
+        neighbor_data = find_neighboring_city(point, target, cities_info)
 
     # Selects two random capitals to highlight
     capitals_data = choose_capitals(point, city_data["code_muni"], cities_info)
@@ -475,6 +481,10 @@ def run_query(point):
         "capitals_to_highlight": capitals_data
 
     }
+
+    from pprint import pprint
+
+    pprint(output)
 
     return output
 
