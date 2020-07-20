@@ -182,7 +182,7 @@ def find_user_city(point, target, cities_info):
     # Extracts data
     code_muni = user_city["code_muni"]
     name_muni = user_city["name_muni"]
-    name_state = user_city["name_muni"]
+    name_state = user_city["name_state"]
     pop_2019 = int(user_city["pop_2019"])
     city_centroid = user_city["geometry"].centroid.coords[0]
     miny = user_city["miny"]
