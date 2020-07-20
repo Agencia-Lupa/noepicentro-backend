@@ -36,6 +36,10 @@ def handle_count():
     Returns the current number of covid deaths
     in the country and the date it was updated
     '''
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
 
     with open("../output/case_count.json") as file:
 
@@ -43,8 +47,9 @@ def handle_count():
 
         output = {
             "deaths": data['deaths'],
-            "date": data['time']
-        }
+            "date": data['time'],
+            "vanishing_cities": data['vanishing_cities']
+            }
 
     return jsonify(output)
 
