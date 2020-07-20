@@ -49,6 +49,8 @@ def main():
 
     capitals_data = [
 
+
+        # SUL
          {'bbox': [(-51.303245191, -30.269413694), (-51.011942199, -29.932302176)],
           'code_muni': '431490',
           'complement': 'ponto turístico da capital gaúcha',
@@ -71,6 +73,7 @@ def main():
           'name_muni': 'Curitiba',
           'name_state': 'PR'},
 
+        # SUDESTE
          {'bbox': [(-46.826199, -24.008430999), (-46.365084, -23.356292999)],
           'code_muni': '355030',
           'complement': 'museu mais famoso da metrópole',
@@ -93,6 +96,7 @@ def main():
           'name_muni': 'Rio de Janeiro',
           'name_state': 'RJ'},
 
+          # CENTRO-OESTE
          {'bbox': [(-48.285828259, -16.049991675), (-47.308405545, -15.501819891)],
           'code_muni': '530010',
           'complement': 'projetada por Oscar Niemeyer',
@@ -115,6 +119,7 @@ def main():
           'name_muni': 'Goiânia',
           'name_state': 'GO'},
 
+          # NORDESTE
          {'bbox': [(-38.699264042, -13.01732616), (-38.30433267, -12.73356241)],
           'code_muni': '292740',
           'complement': 'cartão postal da região',
@@ -137,7 +142,7 @@ def main():
           'name_muni': 'Fortaleza',
           'name_state': 'CE'},
 
-
+          # NORTE
          {'bbox': [(-60.802727218, -3.222208824), (-59.159948322, -1.924304438)],
           'code_muni': '130260',
           'complement': 'centro cultural de fama internacional',

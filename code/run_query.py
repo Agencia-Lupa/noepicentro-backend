@@ -142,7 +142,36 @@ def find_user_city(point, target, cities_info):
     quadrant = gpd.read_feather(quadrant.loc[0, "fpath"])
 
     # Find in which city of the quadrant the point falls in
-    user_city_code = quadrant[ quadrant.geometry.contains(point) ].reset_index(drop=True).loc[0, "code_muni"]
+
+    # Weirdly, not all points within Brazil are contained in the shapefile
+    # of its cities. Weird behavior happens in coastal cities such as Rio de Janeiro.
+    # We will handle this issue now.
+
+    user_city_code = quadrant[ quadrant.geometry.contains(point) ].reset_index(drop=True)
+
+    if user_city_code.shape[0] < 1:
+
+        # Find the closest city and assume we're there
+
+        multipoint = cities_info.unary_union
+
+        source, nearest = nearest_points(point, multipoint)
+
+        nearest = cities_info [ cities_info.geometry == nearest ].reset_index(drop=True)
+
+        assert nearest.shape[0] == 1
+
+        # Fetches the data
+        nearest = nearest.loc[0]
+
+        code_muni = nearest['code_muni']
+
+        user_city_code = code_muni #
+
+    else:
+
+        user_city_code = user_city_code.loc[0, 'code_muni']
+
     user_city = cities_info [ cities_info.code_muni == user_city_code].reset_index()
 
     assert user_city.shape[0] == 1
