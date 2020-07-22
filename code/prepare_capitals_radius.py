@@ -67,7 +67,7 @@ def main():
 
      {'bbox': [(-48.613467449, -27.853768737), (-48.327875277, -27.267971679)],
       'code_muni': '420540',
-      'complement': 'ponte que liga a ilha ao continente',
+      'complement': 'que liga a ilha ao continente',
       'display_text': {'place': 'Ponte Hercílio Luz', 'preffix': 'da'},
       'input_point': ['-27.5942906', '-48.573095'],
       'name_muni': 'Florianópolis',
