@@ -109,7 +109,7 @@ def main():
       'code_muni': '500270',
       'complement': 'parque perto do centro da cidade',
       'display_text': {'place': 'Horto Florestal', 'preffix': 'do'},
-      'input_point': ['-20.276821', '-40.297677'],
+      'input_point': ['-20.469733', '-54.623300'],
       'name_muni': 'Campo Grande',
       'name_state': 'MS'},
 
@@ -184,7 +184,7 @@ def main():
       'input_point': ['-3.1301977', '-60.0232912'],
       'name_muni': 'Manaus',
       'name_state': 'AM'},
-      
+
      {'bbox': [(-48.624408234, -1.526584746), (-48.296124213, -1.019426734)],
       'code_muni': '150140',
       'complement': 'na margem da Baía do Guajará',
