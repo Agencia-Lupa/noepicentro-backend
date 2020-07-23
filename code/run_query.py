@@ -160,7 +160,7 @@ def find_user_city(point, target, cities_info):
 
         nearest = cities_info [ cities_info.geometry == nearest ].reset_index(drop=True)
 
-        # assert nearest.shape[0] == 1, "ambiguous nearest geometry"
+        # assert nearest.shape[0] == 1, "ambiguous or no nearest geometry"
 
         # Fetches the data
         nearest = nearest.loc[0]
@@ -175,7 +175,7 @@ def find_user_city(point, target, cities_info):
 
     user_city = cities_info [ cities_info.code_muni == user_city_code].reset_index()
 
-    # assert user_city.shape[0] == 1, "ambiguous code_muni value"
+    # assert user_city.shape[0] == 1, "ambiguous or no code_muni value"
 
     # Takes the specific datapoint
     user_city = user_city.loc[0]
@@ -386,7 +386,7 @@ def find_neighboring_city(point, target, cities_info):
 
     nearest = cities_info [ cities_info.geometry == nearest ].reset_index(drop=True)
 
-    # assert nearest.shape[0] == 1, "ambiguous nearest geometry"
+    # assert nearest.shape[0] == 1, "ambiguous or no nearest geometry"
 
     # Fetches the data
     nearest = nearest.loc[0]
@@ -439,7 +439,7 @@ def choose_capitals(point, user_city_id, cities_info):
 
     nearest = capitals_info [ capitals_info.geometry == nearest ].reset_index(drop=True)
 
-    # assert nearest.shape[0] == 1, "ambiguous nearest geometry"
+    # assert nearest.shape[0] == 1, "ambiguous or no nearest geometry"
 
     nearest = nearest.loc[0, "code_muni"]
 
