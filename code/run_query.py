@@ -68,7 +68,7 @@ def find_user_area(point, target):
     # Finds in which quadrant the point falls
     
     user_area = reference_map[ reference_map.geometry.contains(point) ].reset_index(drop=True)
-        
+            
     if user_area.shape[0] != 1:
         raise ValueError("ERRO FATAL: input fora do Brasil continental ou ambíguo.")
         
@@ -131,36 +131,36 @@ def find_user_city(point, target, cities_info):
     '''
 
     # Loads the quadrant data
-    
     reference_map = gpd.read_feather("../output/index_city_bboxes.feather")
        
     # Finds in which quadrant the point falls
-    
     quadrant = reference_map[ reference_map.geometry.contains(point) ].reset_index(drop=True)
 
-    assert quadrant.shape[0] == 1
+    # If the point is not within the bounding boxes, then it's probably way out of Brazil
+    # There's no point in trying to compute anything
+    if quadrant.shape[0] != 1:
+        raise ValueError("ERRO FATAL: input fora do Brasil continental ou ambíguo.")
 
     quadrant = gpd.read_feather(quadrant.loc[0, "fpath"])
 
     # Find in which city of the quadrant the point falls in
+    user_city_code = quadrant[ quadrant.geometry.contains(point) ].reset_index(drop=True)
 
     # Weirdly, not all points within Brazil are contained in the shapefile
     # of its cities. Weird behavior happens in coastal cities such as Rio de Janeiro.
-    # We will handle this issue now.
-
-    user_city_code = quadrant[ quadrant.geometry.contains(point) ].reset_index(drop=True)
+    # We will handle this issue now -- with the side effect that the app may 'work'
+    # in border areas outside of Brazil. It's better than crashing in a legit location!
 
     if user_city_code.shape[0] < 1:
 
         # Find the closest city and assume we're there
-
         multipoint = cities_info.unary_union
 
         source, nearest = nearest_points(point, multipoint)
 
         nearest = cities_info [ cities_info.geometry == nearest ].reset_index(drop=True)
 
-        assert nearest.shape[0] == 1
+        # assert nearest.shape[0] == 1, "ambiguous nearest geometry"
 
         # Fetches the data
         nearest = nearest.loc[0]
@@ -175,7 +175,7 @@ def find_user_city(point, target, cities_info):
 
     user_city = cities_info [ cities_info.code_muni == user_city_code].reset_index()
 
-    assert user_city.shape[0] == 1
+    # assert user_city.shape[0] == 1, "ambiguous code_muni value"
 
     # Takes the specific datapoint
     user_city = user_city.loc[0]
@@ -386,7 +386,7 @@ def find_neighboring_city(point, target, cities_info):
 
     nearest = cities_info [ cities_info.geometry == nearest ].reset_index(drop=True)
 
-    assert nearest.shape[0] == 1
+    # assert nearest.shape[0] == 1, "ambiguous nearest geometry"
 
     # Fetches the data
     nearest = nearest.loc[0]
@@ -439,7 +439,7 @@ def choose_capitals(point, user_city_id, cities_info):
 
     nearest = capitals_info [ capitals_info.geometry == nearest ].reset_index(drop=True)
 
-    assert nearest.shape[0] == 1
+    # assert nearest.shape[0] == 1, "ambiguous nearest geometry"
 
     nearest = nearest.loc[0, "code_muni"]
 
