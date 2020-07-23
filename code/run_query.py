@@ -69,7 +69,8 @@ def find_user_area(point, target):
     
     user_area = reference_map[ reference_map.geometry.contains(point) ].reset_index(drop=True)
         
-    assert user_area.shape[0] == 1
+    if user_area.shape[0] != 1:
+        raise ValueError("ERRO FATAL: input fora do Brasil continental ou ambíguo.")
         
     # At first, we will count the population in that particular quadrant
         
@@ -182,7 +183,7 @@ def find_user_city(point, target, cities_info):
     # Extracts data
     code_muni = user_city["code_muni"]
     name_muni = user_city["name_muni"]
-    name_state = user_city["name_state"]
+    name_state = user_city["name_muni"]
     pop_2019 = int(user_city["pop_2019"])
     city_centroid = user_city["geometry"].centroid.coords[0]
     miny = user_city["miny"]
@@ -204,10 +205,6 @@ def find_user_city(point, target, cities_info):
     }
 
     return city_data
-
-def merge_tracts_and_shape(tracts, shp):
-    
-    return shp.merge(tracts, left_on='CD_GEOCODI', right_on='Cod_setor', how='left')
 
 def find_radius(point, tracts, spatial_index, target):
     
@@ -511,12 +508,11 @@ def run_query(point):
 
     }
 
-    from pprint import pprint
-
-    pprint(output)
-
     return output
 
+############
+### MAIN ###
+############
 
 def main(argv):
         

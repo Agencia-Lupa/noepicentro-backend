@@ -19,7 +19,11 @@ def answer():
     lat = str(request.args['lat'])
     lon = str(request.args['lon'])
 
-    out = run_query([lat, lon])
+    try:
+        out = run_query([lat, lon])
+
+    except ValueError as e:
+        return {"error_message":"Pelo visto, você está fora do Brasil continental. Não quer tentar digitar um endereço?"}
 
     return jsonify(out)
  
