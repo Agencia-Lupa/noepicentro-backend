@@ -69,7 +69,7 @@ def main():
       'code_muni': '420540',
       'complement': 'que liga a ilha ao continente',
       'display_text': {'place': 'Ponte Hercílio Luz', 'preffix': 'da'},
-      'input_point': ['-27.5942906', '-48.573095'],
+      'input_point': [' -27.593922', '-48.565862'],
       'name_muni': 'Florianópolis',
       'name_state': 'SC'},
 
@@ -77,7 +77,7 @@ def main():
       'code_muni': '355030',
       'complement': 'museu mais famoso da metrópole',
       'display_text': {'place': 'MASP', 'preffix': 'do'},
-      'input_point': ['-23.5628876', '-46.6504141'],
+      'input_point': ['-23.561444', '-46.655910'],
       'name_muni': 'São Paulo',
       'name_state': 'SP'},
 
@@ -93,17 +93,9 @@ def main():
       'code_muni': '310620',
       'complement': 'marco arquitetônico mineiro',
       'display_text': {'place': 'Praça da Liberdade', 'preffix': 'da'},
-      'input_point': ['-19.9317206', '-43.9424159'],
+      'input_point': ['-19.932046', '-43.938043'],
       'name_muni': 'Belo Horizonte',
       'name_state': 'MG'},
-
-     {'bbox': [(-40.362332237, -20.528261261), (-28.847639914, -20.229200942)],
-      'code_muni': '320530',
-      'complement': 'área verde da capital capixaba',
-      'display_text': {'place': 'Parque Pedra da Cebola', 'preffix': 'do'},
-      'input_point': ['-19.9317206', '-43.9424159'],
-      'name_muni': 'Vitória',
-      'name_state': 'ES'},
 
      {'bbox': [(-54.924333854, -21.585103223), (-53.600442011, -20.165966339)],
       'code_muni': '500270',
@@ -115,7 +107,7 @@ def main():
 
      {'bbox': [(-56.301892114, -15.750652547), (-55.480060956, -15.070064345)],
       'code_muni': '510340',
-      'complement': 'localizado no centro exato da América do Sul',
+      'complement': 'no centro exato da América do Sul',
       'display_text': {'place': 'Obelisco do Centro Geodésico', 'preffix': 'do'},
       'input_point': ['-15.600615', '-56.100513'],
       'name_muni': 'Cuiabá',
