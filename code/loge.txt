@@ -226,3 +226,79 @@ Traceback (most recent call last):
   File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexes/range.py", line 352, in get_loc
     raise KeyError(key)
 KeyError: 0
+[2020-07-25 02:21:06,855] ERROR in app: Exception on /coords [GET]
+Traceback (most recent call last):
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexes/range.py", line 350, in get_loc
+    return self._range.index(new_key)
+ValueError: 0 is not in range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ubuntu/app/backend-python/code/app.py", line 23, in answer
+    out = run_query([lat, lon])
+  File "/home/ubuntu/app/backend-python/code/run_query.py", line 485, in run_query
+    city_data = find_user_city(point, target, cities_info)
+  File "/home/ubuntu/app/backend-python/code/run_query.py", line 181, in find_user_city
+    user_city = user_city.loc[0]
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexing.py", line 1768, in __getitem__
+    return self._getitem_axis(maybe_callable, axis=axis)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexing.py", line 1965, in _getitem_axis
+    return self._get_label(key, axis=axis)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexing.py", line 625, in _get_label
+    return self.obj._xs(label, axis=axis)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/generic.py", line 3537, in xs
+    loc = self.index.get_loc(key)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexes/range.py", line 352, in get_loc
+    raise KeyError(key)
+KeyError: 0
+[2020-07-25 02:22:19,195] ERROR in app: Exception on /coords [GET]
+Traceback (most recent call last):
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexes/range.py", line 350, in get_loc
+    return self._range.index(new_key)
+ValueError: 0 is not in range
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/ubuntu/app/backend-python/code/app.py", line 23, in answer
+    out = run_query([lat, lon])
+  File "/home/ubuntu/app/backend-python/code/run_query.py", line 485, in run_query
+    city_data = find_user_city(point, target, cities_info)
+  File "/home/ubuntu/app/backend-python/code/run_query.py", line 181, in find_user_city
+    user_city = user_city.loc[0]
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexing.py", line 1768, in __getitem__
+    return self._getitem_axis(maybe_callable, axis=axis)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexing.py", line 1965, in _getitem_axis
+    return self._get_label(key, axis=axis)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexing.py", line 625, in _get_label
+    return self.obj._xs(label, axis=axis)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/generic.py", line 3537, in xs
+    loc = self.index.get_loc(key)
+  File "/home/ubuntu/miniconda3/envs/app/lib/python3.8/site-packages/pandas/core/indexes/range.py", line 352, in get_loc
+    raise KeyError(key)
+KeyError: 0
