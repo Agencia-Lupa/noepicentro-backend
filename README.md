@@ -12,8 +12,6 @@ Os dados usados vêm do Censo de 2010 IBGE e do [Brasil.io](https://brasil.io).
 
 Além disso, o cálculo parte do pressuposto que a população é distribuída homogeneamente dentro de cada setor censitário, o que não é necessariamente verdade, especialmente para blocos de maior área.
 
-Ainda assim, mesmo com trata-se de uma estimativa representativa
-
 ## Replicação passo-a-passo
 
 Para reproduzir os resultados em sua própria máquina, você precisa configurar seu ambiente de desenvolvimento da seguinte maneira:
