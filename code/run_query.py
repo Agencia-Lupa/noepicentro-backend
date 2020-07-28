@@ -445,14 +445,14 @@ def choose_capitals(point, user_city_id, cities_info):
 
     first_capital = next(item for item in choices if item["code_muni"] == nearest)
 
-    # Remove selection from choices
-    choices = [ item for item in choices if item["code_muni"] != nearest ]
+    # # Remove selection from choices
+    # choices = [ item for item in choices if item["code_muni"] != nearest ]
 
-    # Second is randomly selected among the remaining options
-    second_capital = random.sample(choices, 1)[0]
+    # # Second is randomly selected among the remaining options
+    # second_capital = random.sample(choices, 1)[0]
     
     # Returns selection as list
-    return [ first_capital, second_capital ]
+    return [ first_capital ]
 
 ###############
 ### WRAPPER ###
