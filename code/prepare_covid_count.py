@@ -94,6 +94,9 @@ def get_city_count(data, fpath):
     # We need 6 digits IBGE code
     data.city_ibge_code = data.city_ibge_code.str.extract("(\d{6})")
 
+    # Fix for Vitória
+    centroids.loc[centroids.code_muni == "320530", "geometry"] = Point([-40.297984, -20.277465])
+
     centroids = centroids.merge(data, left_on="code_muni", right_on="city_ibge_code")
 
     centroids = centroids[["geometry", "deaths"]]
@@ -102,7 +105,6 @@ def get_city_count(data, fpath):
 
     # Round point size
     centroids.geometry = centroids.geometry.apply(lambda x: Point([round(coord, 2) for coord in x.coords[0]]))
-
 
     centroids.to_file(f"{fpath}/deaths.json", driver='GeoJSON')
     
