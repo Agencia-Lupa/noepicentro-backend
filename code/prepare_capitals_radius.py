@@ -113,7 +113,7 @@ def main():
       'code_muni': '500270',
       'display_text': { 
         "pt-br": {'place': 'Horto Florestal', 'prefix': 'do', 'complement': 'parque perto do centro da cidade'},
-        "en": {'place': 'Horto Florestal', 'prefix': '', 'complement': 'a park near the city centre'}
+        "en": {'place': 'Horto Florestal', 'prefix': '', 'complement': 'a park near the city center'}
       },
       'input_point': ['-20.469733', '-54.623300'],
       'name_muni': 'Campo Grande',
@@ -123,7 +123,7 @@ def main():
       'code_muni': '510340',
       'display_text': {
         "pt-br": {'place': 'Obelisco do Centro Geodésico', 'prefix': 'do', 'complement': 'no centro exato da América do Sul' },
-        "en": {'place': 'Obelisco do Centro Geodésico', 'prefix': '', 'complement': 'a landmark in the geographical center of South America' }
+        "en": {'place': 'Obelisco do Centro Geodésico', 'prefix': '', 'complement': 'in the geographical center of S. America' }
       },
       'input_point': ['-15.600615', '-56.100513'],
       'name_muni': 'Cuiabá',
@@ -133,7 +133,7 @@ def main():
       'code_muni': '530010',
       'display_text': {
         "pt-br": {'place': 'Catedral Metropolitana', 'prefix': 'da', 'complement': 'projetada por Oscar Niemeyer' },
-        "en": {'place': 'Catedral Metropolitana', 'prefix': '', 'complement': 'a cathedral projected by Oscar Niemeyer, the renowned architect' }
+        "en": {'place': 'Catedral Metropolitana', 'prefix': '', 'complement': 'a famous modernist church' }
       },
       'input_point': ['-15.7986852', '-47.8757942'],
       'name_muni': 'Brasília',
@@ -143,7 +143,7 @@ def main():
       'code_muni': '520870',
       'display_text': {
         "pt-br": {'place': 'Monumento às Três Raças', 'prefix': 'do', 'complement': 'no setor central do município' },
-        "en": {'place': 'Monumento às Três Raças', 'prefix': '', 'complement': 'statue at the city\'s central area' }
+        "en": {'place': 'Monumento às Três Raças', 'prefix': '', 'complement': 'a statue at the city’s central area' }
       },
       'input_point': ['-16.6798512', '-49.2558648'],
       'name_muni': 'Goiânia',
@@ -173,7 +173,7 @@ def main():
       'code_muni': '211130',
       'display_text': {
         "pt-br": {'place': 'Museu de Artes Visuais', 'prefix': 'do', 'complement': 'no centro histórico da capital maranhense'},
-        "en": {'place': 'Museu de Artes Visuais', 'prefix': '', 'complement': 'a museum in the old centre of this historical city' },
+        "en": {'place': 'Museu de Artes Visuais', 'prefix': '', 'complement': 'a museum in the historical district' },
       },
       'input_point': ['-2.529128', ' -44.305966'],
       'name_muni': 'São Luís',
@@ -183,7 +183,7 @@ def main():
       'code_muni': '292740',
       'display_text': {
         "pt-br": {'place': 'Elevador Lacerda', 'prefix': 'do', 'complement': 'cartão postal da região' },
-        "en": {'place': 'Elevador Lacerda', 'prefix': '', 'complement': 'a lift that links the city\'s harbor and the historical centre' }
+        "en": {'place': 'Elevador Lacerda', 'prefix': '', 'complement': 'a lift that links the harbor to the historical center' }
       },
       'input_point': ['-12.9744658', '-38.5131887'],
       'name_muni': 'Salvador',
@@ -192,8 +192,8 @@ def main():
      {'bbox': [(-38.637902938, -3.894603063), (-38.401327688, -3.692025971)],
       'code_muni': '230440',
       'display_text': {
-        "pt-br": { 'place': 'Praça do Ferreira', 'prefix': 'da', 'complement': 'conhecida como "coração da cidade"' },
-        "en": { 'place': 'Praça do Ferreira', 'prefix': '', 'complement': 'a plaza that is also known as "the heart of the city' }
+        "pt-br": { 'place': 'Praça do Ferreira', 'prefix': 'da', 'complement': 'conhecida como “coração da cidade”' },
+        "en": { 'place': 'Praça do Ferreira', 'prefix': '', 'complement': 'a plaza that is also known as “heart of the city”' }
       },
       'input_point': ['-3.7277894', '-38.5276207'],
       'name_muni': 'Fortaleza',
@@ -203,7 +203,7 @@ def main():
       'code_muni': '130260',
       'display_text': {
         "pt-br": {'place': 'Teatro Amazonas', 'prefix': 'do', 'complement': 'centro cultural de fama internacional' },
-        "en": {'place': 'Teatro Amazonas', 'prefix': '', 'complement': 'a theatre well-known by its unique facade' }
+        "en": {'place': 'Teatro Amazonas', 'prefix': '', 'complement': 'a theatre well known for its unique facade' }
       },
       'input_point': ['-3.1301977', '-60.0232912'],
       'name_muni': 'Manaus',
