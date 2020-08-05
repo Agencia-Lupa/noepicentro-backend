@@ -1,6 +1,7 @@
 import flask, json
 from flask import request, jsonify, after_this_request
 from run_query import run_query, get_covid_count
+from run_query_arbitrary import run_query_arbitrary
 from update import main as update
 
 app = flask.Flask(__name__)
@@ -21,6 +22,25 @@ def answer():
 
     try:
         out = run_query([lat, lon])
+
+    except ValueError as e:
+        return {"error":1}
+
+    return jsonify(out)
+
+@app.route("/coords_deaths", methods=['GET'])
+def answer():
+    @after_this_request
+    def add_header(response):
+        response.headers['Access-Control-Allow-Origin'] = '*'
+        return response
+        
+    lat = str(request.args['lat'])
+    lon = str(request.args['lon'])
+    deaths = str(request.args['deaths'])
+
+    try:
+        out = run_query_arbitrary([lat, lon, deaths])
 
     except ValueError as e:
         return {"error":1}
