@@ -29,7 +29,7 @@ def answer():
     return jsonify(out)
 
 @app.route("/coords_deaths", methods=['GET'])
-def answer():
+def answer_arbitrary():
     @after_this_request
     def add_header(response):
         response.headers['Access-Control-Allow-Origin'] = '*'
