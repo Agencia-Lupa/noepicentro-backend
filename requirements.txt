@@ -16,7 +16,7 @@ geofeather==0.3.0
 geopandas @ git+git://github.com/geopandas/geopandas.git@18dca3ffcf065307dcf0393b1e824ebc896d1a7b
 importlib-metadata==1.6.0
 ipykernel==5.1.4
-ipython==7.13.0
+ipython==7.16.3
 ipython-genutils==0.2.0
 ipywidgets==7.5.1
 jedi==0.17.0
