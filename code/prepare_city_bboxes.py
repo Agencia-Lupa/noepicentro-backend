@@ -93,7 +93,7 @@ def divide_bbox(rectangle, nrows, ncols):
     for splitter in splitters:
         rectangle = MultiPolygon(split(rectangle, splitter))
 
-    return [ split_rectangle for split_rectangle in rectangle ]
+    return [ split_rectangle for split_rectangle in rectangle.geoms ]
 
 def find_neighbors(row, gdf):
     '''
