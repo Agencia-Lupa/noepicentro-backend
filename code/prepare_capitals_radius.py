@@ -222,7 +222,7 @@ def main():
 
     compute(capitals_data)
 
-    save(capitals_data, "../output/")
+    save(capitals_data, "/app/output/")
 
 if __name__ == "__main__":
     main()

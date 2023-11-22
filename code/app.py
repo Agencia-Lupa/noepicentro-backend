@@ -71,7 +71,7 @@ def handle_count():
         response.headers['Access-Control-Allow-Origin'] = '*'
         return response
 
-    with open("../output/case_count.json") as file:
+    with open("/app/output/case_count.json") as file:
 
         data = json.load(file)
 

@@ -37,7 +37,7 @@ def get_covid_count(measure='deaths'):
     to that tha we have pre-processed
     '''
     
-    with open("../output/case_count.json") as file:
+    with open("/app/output/case_count.json") as file:
 
         data = json.load(file)
 
@@ -63,7 +63,7 @@ def find_user_area(point, target):
     
     # Loads the quadrant data
     
-    reference_map = gpd.read_feather("../output/index_tracts_bboxes.feather")
+    reference_map = gpd.read_feather("/app/output/index_tracts_bboxes.feather")
        
     # Finds in which quadrant the point falls
     
@@ -131,7 +131,7 @@ def find_user_city(point, target, cities_info):
     '''
 
     # Loads the quadrant data
-    reference_map = gpd.read_feather("../output/index_city_bboxes.feather")
+    reference_map = gpd.read_feather("/app/output/index_city_bboxes.feather")
        
     # Finds in which quadrant the point falls
     quadrant = reference_map[ reference_map.geometry.contains(point) ].reset_index(drop=True)
@@ -360,7 +360,7 @@ def find_radius(point, tracts, spatial_index, target):
             
     # return matches, area
 
-    #matches.to_feather(f"../output/radiuses/{point}.feather")
+    #matches.to_feather(f"/app/output/radiuses/{point}.feather")
     
     radius_data = {
 
@@ -422,7 +422,7 @@ def choose_capitals(point, user_city_id, cities_info):
     Makes sure its not the user city.
     '''
 
-    with open("../output/capitals_radius.json") as file:
+    with open("/app/output/capitals_radius.json") as file:
 
         choices = json.load(file)
 
@@ -467,7 +467,7 @@ def run_query(point):
     # Opens the file with the current count of covid-19 deaths
     target = get_covid_count(measure='deaths')
 
-    cities_info = gpd.read_feather("../output/city_info.feather")
+    cities_info = gpd.read_feather("/app/output/city_info.feather")
 
     # Gets the parts of the census tracts with the user data that we need to load
     gdf = find_user_area(point, target)

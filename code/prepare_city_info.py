@@ -110,21 +110,21 @@ def save_file(gdf, fpath):
 
 def main():
 
-	gdf = read_shapes("../data/geo_data/malha_brasil/br_municipios")
+	gdf = read_shapes("/app/data/geo_data/malha_brasil/br_municipios")
 
-	df = read_population("../data/city_population.csv")
+	df = read_population("/app/data/city_population.csv")
 
 	# df = add_state_data(df)
 
 	gdf = merge(gdf, df)
 
-	save_file(gdf, "../output/city_outlines.feather")
+	save_file(gdf, "/app/output/city_outlines.feather")
 
 	gdf = get_bbox(gdf)
 
 	gdf = get_centroids(gdf)
 
-	save_file(gdf, "../output/city_info.feather")
+	save_file(gdf, "/app/output/city_info.feather")
 
 if __name__ == "__main__":
 	
