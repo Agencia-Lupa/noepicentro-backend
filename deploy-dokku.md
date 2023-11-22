@@ -67,6 +67,13 @@ dokku letsencrypt:set $APP_NAME email $ADMIN_EMAIL
 dokku domains:add $APP_NAME $DOMAIN
 ```
 
+### Add initial data/config:
+APP_STORAGE_PATH="/var/lib/dokku/data/storage/$APP_NAME"
+sudo mkdir -p "$APP_STORAGE_PATH/data"
+sudo mkdir -p "$APP_STORAGE_PATH/output"
+dokku storage:mount $APP_NAME "$APP_STORAGE_PATH/data:/app/data"
+dokku storage:mount $APP_NAME "$APP_STORAGE_PATH/output:/app/output"
+
 ## First Deployment
 
 Since you've created and configured the app on the server, you can switch to
