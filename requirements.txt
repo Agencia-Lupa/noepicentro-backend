@@ -12,8 +12,10 @@ descartes==1.1.0
 entrypoints==0.3
 feather-format==0.4.1
 Fiona==1.8.13.post1
+Flask
 geofeather==0.3.0
-geopandas @ git+git://github.com/geopandas/geopandas.git@18dca3ffcf065307dcf0393b1e824ebc896d1a7b
+geopandas
+gunicorn
 importlib-metadata==1.6.0
 ipykernel==5.1.4
 ipython==7.13.0
@@ -34,8 +36,8 @@ munch==2.5.0
 nbconvert==5.6.1
 nbformat==5.0.6
 notebook==6.0.3
-numpy @ file:///home/conda/feedstock_root/build_artifacts/numpy_1591485221441/work
-pandas @ file:///home/conda/feedstock_root/build_artifacts/pandas_1590752755944/work
+numpy
+pandas
 pandocfilters==1.4.2
 parso==0.7.0
 pexpect==4.8.0
@@ -47,18 +49,19 @@ pyarrow==0.17.1
 pygeos==0.7.1
 Pygments==2.6.1
 pyparsing==2.4.7
-pyproj @ file:///home/conda/feedstock_root/build_artifacts/pyproj_1588596072923/work
+pyproj
 pyrsistent==0.16.0
 python-dateutil==2.8.1
 pytz==2020.1
 pyzmq==18.1.1
 qtconsole==4.7.4
 QtPy==1.9.0
+requests
 Rtree==0.9.4
 Send2Trash==1.5.0
-Shapely==1.7.0
-sip==4.19.13
-six @ file:///home/conda/feedstock_root/build_artifacts/six_1590081179328/work
+Shapely
+sip
+six
 terminado==0.8.3
 testpath==0.4.4
 tornado==6.0.4

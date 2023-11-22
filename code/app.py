@@ -1,10 +1,16 @@
-import flask, json
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from flask import Flask
+import json
 from flask import request, jsonify, after_this_request
 from run_query import run_query, get_covid_count
 from run_query_arbitrary import run_query_arbitrary
 from update import main as update
 
-app = flask.Flask(__name__)
+app = app = Flask(__name__)
 
 @app.route("/", methods=['GET'])
 def answer_basic():
