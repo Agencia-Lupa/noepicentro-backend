@@ -105,7 +105,7 @@ def create_random_points(gdf):
 
 			print(f"Saving tract {cod_setor}")
 
-			outfile = f"../output/tract_points/{cod_setor}.json"
+			outfile = f"/app/output/tract_points/{cod_setor}.json"
 
 			points.to_file(outfile, driver="GeoJSON")
 
@@ -134,9 +134,9 @@ def parallelize(gdf, func):
 
 def main():
 
-	handle_outpath("../output/tract_points/")
+	handle_outpath("/app/output/tract_points/")
 	
-	gdf = read_file("../output/setores_censitarios.feather")
+	gdf = read_file("/app/output/setores_censitarios.feather")
 
 	gdf = process_columns(gdf)
 

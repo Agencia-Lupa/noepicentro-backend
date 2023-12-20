@@ -93,7 +93,7 @@ def divide_bbox(rectangle, nrows, ncols):
     for splitter in splitters:
         rectangle = MultiPolygon(split(rectangle, splitter))
 
-    return [ split_rectangle for split_rectangle in rectangle ]
+    return [ split_rectangle for split_rectangle in rectangle.geoms ]
 
 def find_neighbors(row, gdf):
     '''
@@ -196,7 +196,7 @@ def split_tracts(row, output_dir, sindex, tracts):
 
 def main():    
         
-    df, gdf = read_data("../data/city_population.csv", "../data/geo_data/malha_brasil/br_municipios/")
+    df, gdf = read_data("/app/data/city_population.csv", "/app/data/geo_data/malha_brasil/br_municipios/")
 
     gdf = merge_info_and_shape(df, gdf)
 
@@ -220,7 +220,7 @@ def main():
             
     # Make sure that the output directory is empty, avoiding overwrites
 
-    directory =  "../output/municipios_divididos_feather/"
+    directory =  "/app/output/municipios_divididos_feather/"
 
     if not os.path.exists(directory):
         
@@ -248,7 +248,7 @@ def main():
     bboxes[['neighbors', 'neighbor_count']] = bboxes.apply(find_neighbors, args=[bboxes], axis=1)    
 
     # Saves an index
-    bboxes.to_feather("../output/index_city_bboxes.feather")
+    bboxes.to_feather("/app/output/index_city_bboxes.feather")
     
     return bboxes
 

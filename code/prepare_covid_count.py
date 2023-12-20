@@ -17,7 +17,7 @@ def download():
 
     r = requests.get("https://data.brasil.io/dataset/covid19/caso.csv.gz")
 
-    with open("../output/brasil-io-cases.csv.gz", 'wb') as f:
+    with open("/app/output/brasil-io-cases.csv.gz", 'wb') as f:
 
         for chunk in r.iter_content(chunk_size=1024):
 
@@ -29,7 +29,7 @@ def download():
 
 def read_data():
 
-    df = pd.read_csv("../output/brasil-io-cases.csv.gz", encoding="Latin5", dtype={"city_ibge_code":str})
+    df = pd.read_csv("/app/output/brasil-io-cases.csv.gz", encoding="Latin5", dtype={"city_ibge_code":str})
 
     df = df [ df.is_last ]
 
@@ -87,7 +87,7 @@ def get_covid_count(data, fpath):
 
 def get_city_count(data, fpath):
 
-    centroids = gpd.read_feather("../output/city_info.feather")
+    centroids = gpd.read_feather("/app/output/city_info.feather")
 
     centroids = centroids[["code_muni", "geometry"]]
 
@@ -116,12 +116,12 @@ def main():
 
     get_covid_count(
         data = df,
-        fpath = "../output/"
+        fpath = "/app/output/"
     )
 
     get_city_count(
         data = df,
-        fpath = "../output/"
+        fpath = "/app/output/"
     )
 
 if __name__ == "__main__":

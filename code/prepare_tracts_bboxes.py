@@ -83,7 +83,7 @@ def divide_bbox(rectangle, nrows, ncols):
     for splitter in splitters:
         rectangle = MultiPolygon(split(rectangle, splitter))
 
-    return [ split_rectangle for split_rectangle in rectangle ]
+    return [ split_rectangle for split_rectangle in rectangle.geoms ]
 
 
 
@@ -212,13 +212,13 @@ def split_tracts(row, output_dir, sindex, tracts):
 def main():    
 
     # Reads and processes the data
-    df, gdf = read_data("../data/tracts_basic_data.csv","../data/geo_data/setores_censitarios_shp_reduzido/")
+    df, gdf = read_data("/app/data/tracts_basic_data.csv","/app/data/geo_data/setores_censitarios_shp_reduzido/")
     
     gdf = merge_tracts_and_shape(df, gdf)
 
     gdf = gdf.drop("Cod_setor", axis=1) # We won't need tract ids after the merge
 
-    # gdf.to_feather("../output/setores_censitarios.feather")    
+    # gdf.to_feather("/app/output/setores_censitarios.feather")    
     
     gdf.geometry = gdf.geometry.buffer(0)
         
@@ -244,7 +244,7 @@ def main():
     # Save a file for each bounding box and its tracts
             
     # Make sure that the output directory is empty, avoiding overwrites
-    directory =  "../output/setores_censitarios_divididos_feather/"
+    directory =  "/app/output/setores_censitarios_divididos_feather/"
 
     if not os.path.exists(directory):
         
@@ -270,7 +270,7 @@ def main():
 
     # Finds the neighbors and counts
     bboxes[['neighbors', 'neighbor_count']] = bboxes.apply(find_neighbors, args=[bboxes], axis=1)    
-    bboxes.to_feather("../output/index_tracts_bboxes.feather")
+    bboxes.to_feather("/app/output/index_tracts_bboxes.feather")
     
     return bboxes
 
