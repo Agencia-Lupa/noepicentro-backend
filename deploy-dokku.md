@@ -55,6 +55,7 @@ On Dokku server, set the correct values for the variables:
 export ADMIN_EMAIL="admin@api.noepicentro.news"
 export APP_NAME="noepicentro-backend"
 export DOMAIN="api.noepicentro.news"
+export DOMAIN2="api.noepicentro.com"
 ```
 
 Now, run the commands to create and configure the app:
@@ -64,7 +65,7 @@ Now, run the commands to create and configure the app:
 dokku apps:create $APP_NAME
 dokku checks:disable $APP_NAME
 dokku letsencrypt:set $APP_NAME email $ADMIN_EMAIL
-dokku domains:add $APP_NAME $DOMAIN
+dokku domains:add $APP_NAME $DOMAIN $DOMAIN2
 ```
 
 ### Add initial data/config:
